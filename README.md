@@ -493,3 +493,32 @@ Selectors should never use HTML element IDs. They are difficult to override with
    height: 100px;
 }
 ```
+
+### Use Pre-Processor Variables
+
+Variables allow us to quickly reuse values and have a change once mentality. Variables should be created/used for things like fonts, line height, padding, margin etc. Please make sure that if you need a value that either greater than +10 or * 4 more, a new variable should be created (if this value is needed in more than one place/the px value should be used as it'll be easier to read)
+
+```scss
+/* Good */
+
+@fontSizeLarge = 14px;
+
+.text--large {
+    font-size: @fontSizeLarge;
+}
+
+.text--larger {
+    font-size: @fontSizeLarge + 4;
+}
+
+/* Bad */
+@fontSizeLarge = 14px;
+
+.text--large {
+    font-size: 14px;
+}
+
+.text--larger {
+    font-size: @fontSizeLarge + 20;
+}
+```
