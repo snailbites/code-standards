@@ -10,11 +10,7 @@ We've borrowed plenty of ideas in the formation of this document. Ultimately, wh
 * [Style Guide Driven Development](https://www.youtube.com/watch?v=ldW7zVmqu5g)
 
 ### Comments
-
-We follow the commenting guideline from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#comments) with the following exception:
-* Place comment on the same line as the CSS declaration it's related to.
-
-Also, add file-level comments at the top of every CSS file, describing the file in the following format:
+Add file-level comments at the top of every CSS file, describing the file in the following format:
 
 ```css
 /**
@@ -23,6 +19,20 @@ Also, add file-level comments at the top of every CSS file, describing the file 
 * @tested       browser 1, browser 2
 * @requires     helpers.css (tied to the @name of another file)
 */
+```
+
+Comments should go on the same name as the CSS style. Magic numbers, odd values, and things that might confuse other developers should always be commented.
+
+```css
+/* Good - gives helpful explanation to other developers */
+.container {
+	padding: 37px; /* This is needed to match the design of the gutter */
+}
+
+/* Bad - no comment */
+.container {
+	float: left !important;
+}
 ```
 
 ### Class Names
