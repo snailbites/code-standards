@@ -9,9 +9,25 @@ We've borrowed plenty of ideas in the formation of this document. Ultimately, wh
 * [BEM](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/)
 * [Style Guide Driven Development](https://www.youtube.com/watch?v=ldW7zVmqu5g)
 
+### Comments
+
+We follow the commenting guideline from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#comments) with the following exception:
+* Place comment on the same line as the CSS declaration it's related to.
+
+Also, add file-level comments at the top of every CSS file, describing the file in the following format:
+
+```css
+/**
+* @desc         Description of the file.
+* @name         Simple name for the file (i.e., Search_Widget)
+* @tested       browser 1, browser 2
+* @requires     helpers.css (tied to the @name of another file)
+*/
+```
+
 ### Class Names
 
-Class names should be camel case, with no dashes or underscores.
+All selectors for a particular component start with the wrapper class name. Class names should be camel case with the first letter lowercase.
 
 ```css
 /* Good - Use camel case */
@@ -24,19 +40,81 @@ Class names should be camel case, with no dashes or underscores.
 .this-is-bad {}
 ```
 
+Children of the wrapper class should take on a dash and be written in camelcase. Sections with more than two dashes should consider creating a new parent style and start your naming again recursively.
+Ex: sectionParent-sectionChild. 
+
+```
+/* Good - wrapper and one child */
+.sectionParent-sectionChild {}
+
+/* Bad - too many children */``
+.sectionParent-sectionChild-sectionChild2-sectionThisIsSparta {}
+```
+
+Class names can take on modifiers. If a class needs a simple property change, add the modifier to the end of the class, perceded by two dashes.
+```
+/* Good */
+.site {
+    ...
+}
+.site--blue {
+    color: @colorBlue;
+}
+
+/* Bad */``
+.site.blue.red {
+...
+}
+```
+
+Change of state, which is driven by angular/javascript (ie. classes tacked on using ng-class or a directive), should be named in a boolean fashion.
+
+```
+/* Good */
+<button ng-class=“{ ‘isBlue’ : isClicked() }”>
+.isBlue {
+    color: @colorBlue;
+}
+
+/* Bad */
+<button ng-class=“{ ‘blueBtn’ : isClicked() }”>
+
+```
+
+
+
+
+
+### Selectors
+
+Each selector should appear on its own line. The line should break immediately after the comma. Each selector should be aligned to the same left column.
+
+```css 
+/* Good */
+button,
+input.button {
+   color: red;
+}
+
+/* Bad - selectors on one line */
+button, input.button {
+   color: red;
+}
+```
+
 ### Indentation
 
 Each indentation level is made up of four spaces. Do not use tabs. (Please set your editor to use four spaces)
 
 ```css
 /* Good */
-.snailbites {
+.site {
     color: #fff;
     background-color: #000;
 }
 
 /* Bad - all on one line */
-.snailbites {color: #fff; background-color: #000;}
+.site {color: #fff; background-color: #000;}
 ```
 
 Rules inside of `@media` must be indented an additional level.
@@ -44,7 +122,7 @@ Rules inside of `@media` must be indented an additional level.
 ```css
 /* Good */
 @media screen and (max-width:480px) {
-   .snailbites {
+   .site {
        color: green;
    }
 }
@@ -56,17 +134,17 @@ The opening brace should be on the same line as the last selector in the rule an
 
 ```css
 /* Good */
-.stubbornella {
+.site {
     color: #fff;
 }
 
 /* Bad - closing brace is in the wrong place */
-.stubbornella {
+.site {
     color: #fff;
     }
 
 /* Bad - opening brace missing space */
-.stubbornella{
+.site{
     color: #fff;
 }
 ```
@@ -128,17 +206,14 @@ Nesting should be limited to one level deep. More than two selectors become non-
 }
 ```
 
-#### Even more nesting
-More examples. Nesting shou
-
-
-Declare extendable classes first in a declaration block. (Borrowed from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#4-format))
+Declare extendable classes first in a declaration block with one line of whitespace beneath them.
 
 ```scss
 /* Good */
-.stubbornella {
+.site {
     .transition(background, .3s, ease);
     .text-left;
+    
     color: #555;
     font-size: 11px;
 }
@@ -178,23 +253,7 @@ border-radius: 4px;
         border-radius:4px;
 ```
 
-Suffix property value pairs that apply only to a particular browser or class of browsers with a comment listing browsers affected.
-
-```css
-background: #fcfcfc; /* Old browsers */
-background: -moz-linear-gradient(...); /* FF3.6+ */
-background: -webkit-gradient(...); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(...); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(...); /* Opera 11.10+ */
-background: -ms-linear-gradient(...); /* IE10+ */
-background: linear-gradient(...); /* W3C */
-```
-
-Suffix fallback with “Old browsers” and standard property with “W3C”. Add a plus or minus to indicate that a property applies to all previous browsers by the same vendor or all future browsers by the same vendor.
-Using !important
-
-Do not use !important on CSS properties. They will ruin specificity. The only time this is allowed is in a global style (provided by Core team).
-
+Do not use !important on CSS properties. They will ruin specificity.
 ```css
 /* Good */
 .site {
@@ -252,7 +311,7 @@ Strings should always use double quotes (never single quotes).
 
 ### Background Images and Other URLs
 
-When using a url() value, always use quotes around the actual URL. 
+When using a url() value, always use quotes around the actual URL for readability. 
 
 ```css
 /* Good */
@@ -268,7 +327,7 @@ When using a url() value, always use quotes around the actual URL.
 
 ### Attribute values in selectors
 
-Use double quotes around attribute selectors.
+Use double quotes around attribute selectors for readability.
 
 ```css
 /* Good */
@@ -306,6 +365,8 @@ Zero values do not require named units, omit the “px” or other unit.
 
 ### Internet Explorer Hacks
 
+NEEDS WORK
+
 Only property hacks are allowed. To target Internet Explorer, use Internet Explorer-specific hacks like * and _ in the normal CSS files. Browser specific styles should not be in separate per-browser stylesheets. We prefer to keep all the CSS for a particular object in one place as it is more maintainable. In addition selector hacks should not be used. Classes like .ie6 increase specificity. Hacks should be kept within the CSS rule they affect and only property hacks should be used.
 
 ```css
@@ -321,23 +382,6 @@ Only property hacks are allowed. To target Internet Explorer, use Internet Explo
 }
 .ie6 .container {
    margin: -1px;
-}
-```
-
-### Selectors
-
-Each selector should appear on its own line. The line should break immediately after the comma. Each selector should be aligned to the same left column.
-
-```css 
-/* Good */
-button,
-input.button {
-   color: red;
-}
-
-/* Bad - selectors on one line */
-button, input.button {
-   color: red;
 }
 ```
 
@@ -357,27 +401,6 @@ span.buttonAsLink {}
 span.buttonAsLink {}
 ```
 
-### Scoped styles
-
-All selectors for a particular component start with the wrapper class name.
-
-```css
-/* Good */
-.calloutButton {
-   color: blue;
-}
-.calloutButton span {
-   color: green;
-}
-
-/* Bad - second rule missing scope */
-.calloutButton {
-   color: blue;
-}
-span {
-   color: green;
-}
-```
 
 ### :hover and :focus
 
@@ -411,64 +434,3 @@ Selectors should never use HTML element IDs. They are difficult to override with
    height: 100px;
 }
 ```
-
-The author field should contain the username of the person who first created the file. Subsequent authors or primary maintainers may also choose to add their name. The browsers in which this file was tested should be listed next to @tested.
-
-### Naming classes
-
-When labelling elements within a component with a class, try to avoid generic classes like ``.inner``, ``.hd``, ``.bd``. Instead, prefix the class name with the name of the component. This is to avoid CSS getting overwritten when classes are too generic.
-
-```css
-/* Good */
-.boxHd {
-    background: #ccc;
-}
-.boxBd {
-    background: #ccc;
-}
-
-/* Bad */
-.box .hd {
-    background: #ccc;
-}
-.box .bd  {
-    background: #ccc;
-}
-```
-
-However when extending a component and styling the inner elements, try to use the base component's inner elements' class name for styling, instead of extending the class names of the inner elements as well.
-
-```css
-/* Good */
-.boxSimple .boxHd {
-    background: #ccc;
-}
-.boxSimple .boxBd {
-    background: #ccc;
-}
-
-/* Avoid this if possible */
-.boxSimple .boxSimpleHd {
-    background: #ccc;
-}
-```
-
-
-### Comments
-
-We follow the commenting guideline from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#comments) with the following exception:
-* Place comment on the same line as the CSS declaration it's related to.
-
-Also, add file-level comments at the top of every CSS file, describing the file in the following format:
-
-```css
-/**
-* @desc         Description of the file.
-* @name         Simple name for the file (i.e., Search_Widget)
-* @author       username
-* @tested       browsers
-* @requires     helpers.css (tied to the @name of another file)
-*/
-```
-
-
