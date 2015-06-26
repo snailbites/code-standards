@@ -1,8 +1,13 @@
-# OOCSS code standards
+# Code Standards
 
 The purpose of this document is to provide guidelines for writing CSS. Code conventions are important for the long-term maintainability of code. Most of the time, developers are maintaining code, either their own or someone else’s. The goal is to have everyone’s code look the same, which allows any developer to easily work on another developer’s code.
 
-We've borrowed some ideas from [Idiomatic CSS](https://github.com/necolas/idiomatic-css) and credited it throughout the document.
+We've borrowed plenty of ideas in the formation of this document. Ultimately, what you are reading has been strongly influenced by the ideas of Medium's style guide and Nicole Sullivan's Style Guide Driven Development. What you are seeing is a mix of OOCSS and BEM. For more information, read here:
+
+* [Medium's style guide](https://medium.com/@fat/mediums-css-is-actually-pretty-fucking-good-b8e2a6c78b06)
+* [OOCSS](http://www.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)
+* [BEM](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/)
+* [Style Guide Driven Development](https://www.youtube.com/watch?v=ldW7zVmqu5g)
 
 ### Class Names
 
@@ -25,13 +30,13 @@ Each indentation level is made up of four spaces. Do not use tabs. (Please set y
 
 ```css
 /* Good */
-.stubbornella {
+.snailbites {
     color: #fff;
     background-color: #000;
 }
 
 /* Bad - all on one line */
-.stubbornella {color: #fff; background-color: #000;}
+.snailbites {color: #fff; background-color: #000;}
 ```
 
 Rules inside of `@media` must be indented an additional level.
@@ -39,7 +44,7 @@ Rules inside of `@media` must be indented an additional level.
 ```css
 /* Good */
 @media screen and (max-width:480px) {
-   .stubbornella {
+   .snailbites {
        color: green;
    }
 }
@@ -47,7 +52,7 @@ Rules inside of `@media` must be indented an additional level.
 
 ### Brace Alignment
 
-The opening brace should be on the same line as the last selector in the rule and should be preceded by a space. The closing brace should be on its own line after the last property and be indented to the same level as the line on which the opening brace is.
+The opening brace should be on the same line as the last selector in the rule and should be preceded by a space. The closing brace should be on its own line after the last property and be indented to the same level as the line on which the opening brace is. Keep in mind that you are not saving bytes by this. Spaces are ultimately removed in the build process.
 
 ```css
 /* Good */
@@ -72,38 +77,38 @@ Each property must be on its own line and indented one level. There should be no
 
 ```css
 /* Good */
-.stubbornella {
+.site {
     background-color: blue;
     color: red;
 }
 
 /* Bad - missing spaces after colons */
-.stubbornella {
+.site {
     background-color:blue;
     color:red;
 }
 
 /* Bad - missing last semicolon */
-.stubbornella {
+.site {
     background-color: blue;
     color:red
 }
 ```
 
-### Using CSS Preprocessors
+### Nesting
 
-Keep nesting to 1 level deep. 
+Nesting should be limited to one level deep. More than two selectors become non-performant. 
 
 ```scss
 /* Good */
-.stubbornella {
+.site {
     .inner {
       ...
     }
 }
 
 /* Bad - more than 1 level of nesting */
-.stubbornella {
+.site {
     .inner {
       ...
 
@@ -122,6 +127,10 @@ Keep nesting to 1 level deep.
     }
 }
 ```
+
+#### Even more nesting
+More examples. Nesting shou
+
 
 Declare extendable classes first in a declaration block. (Borrowed from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#4-format))
 
@@ -148,7 +157,7 @@ Declare extendable classes first in a declaration block. (Borrowed from [Idiomat
 When using vendor-prefixed properties, always use the standard property as well. The standard property must always come after all of the vendor-prefixed versions of the same property.
 
 ```css
-.stubbornella {
+.site {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -188,12 +197,12 @@ Do not use !important on CSS properties. They will ruin specificity. The only ti
 
 ```css
 /* Good */
-.stubbornella {
+.site {
    color: red;
 }
 
 /* Bad - don't use !important */
-.stubbornella {
+.site {
    color: red !important;
 }
 ```
@@ -204,40 +213,24 @@ All font sizes must be specified using rem only with a pixel fall back. Do not u
 
 ```css
 /* Good */
-.stubbornella {
+.site {
    font-size: 14px; /* pixel fall back rule should come first */
    font-size: 1.4rem;
 }
 
 /* Bad - uses ems */
-.stubbornella {
+.site {
    font-size: 1.2em;
 }
 
 /* Bad - uses percentage */
-.stubbornella {
+.site {
    font-size: 86%;
 }
 
 /* Bad - uses pixel only */
-.stubbornella {
+.site {
    font-size: 14px;
-}
-```
-
-### HEX value
-
-When declaring HEX values, use lowercase and shorthand (where possible) (Borrowed from [Idiomatic CSS] (https://github.com/necolas/idiomatic-css#4-format))
-
-```css
-/* Good */
-.stubbornella {
-    color: #ccc;
-}
-
-/* Bad */
-.stubbornella {
-    color: #CCCCCC;
 }
 ```
 
@@ -247,12 +240,12 @@ Strings should always use double quotes (never single quotes).
 
 ```css
 /* Good */
-.stubbornella:after {
+.container:after {
     content: "Stubbornella";
 }
 
 /* Bad - single quotes */
-.stubbornella:after {
+.container:after {
     content: 'Stubbornella';
 }
 ```
@@ -263,12 +256,12 @@ When using a url() value, always use quotes around the actual URL.
 
 ```css
 /* Good */
-.stubbornella {
+.container {
     background: url("img/logo.png");
 }
 
 /* Bad - missing quotes */
-.stubbornella {
+.container {
     background: url(img/logo.png);
 }
 ```
@@ -301,12 +294,12 @@ Zero values do not require named units, omit the “px” or other unit.
 
 ```css
 /* Good */
-.stubbornella {
+.container {
    margin: 0;
 }
 
 /* Bad - uses units */
-.stubbornella {
+.container {
    margin: 0px;
 }
 ```
@@ -317,16 +310,16 @@ Only property hacks are allowed. To target Internet Explorer, use Internet Explo
 
 ```css
 /* Good */
-.stubbornella {
+.container {
    margin: 0;
    _margin: -1px;
 }
 
 /* Bad - uses selector hacks */
-.stubbornella {
+.container {
    margin: 0px;
 }
-.ie6 .stubbornella {
+.ie6 .container {
    margin: -1px;
 }
 ```
@@ -421,26 +414,6 @@ Selectors should never use HTML element IDs. They are difficult to override with
 
 The author field should contain the username of the person who first created the file. Subsequent authors or primary maintainers may also choose to add their name. The browsers in which this file was tested should be listed next to @tested.
 
-### Width and height on components
-
-No heights on anything that contains text. Components should be flexible and their widths should be controlled by grids.
-
-```css
-/* Good - no width specified */
-.calloutContent {
-    border: 1px solid #ccc;
-    background: #fff;
-}
-
-/* Bad - dimension specified */
-.calloutContent {
-    width: 200px;
-    height: 150px;
-    border: 1px solid #ccc;
-    background: #fff;
-}
-```
-
 ### Naming classes
 
 When labelling elements within a component with a class, try to avoid generic classes like ``.inner``, ``.hd``, ``.bd``. Instead, prefix the class name with the name of the component. This is to avoid CSS getting overwritten when classes are too generic.
@@ -499,59 +472,3 @@ Also, add file-level comments at the top of every CSS file, describing the file 
 ```
 
 
-
-```
-HOW DO WE HANDLE NESTING?
-=-=-=-=-
-<block>
-</block>
-.block {}
-
-<block>
-    <p>
-</block>
-.block {}
-.block < p {}
-
-<block>
-    <child>
-        <h1>
-        <p>
-    </child>
-</block>
-.block {}
-
-.block-child {}
-.block-child > h1 {}
-.block-child > p {}
-
-<block>
-    <child>
-        <grandchild>
-            <great-grandchild>
-                <h1>
-                <p>
-            </great-grandchild>
-            <h2>
-            <p>
-            <great-grandchild>
-    <h1>
-    <p>
-            </great-grandchild>
-        </grandchild>
-    </child>
-    <child>
-    </child>
-</block>
-
-.block {}
-.block-h1 {}
-.block-p {}
-
-.block-grandChild {}
-.block-greatGrandchild {}
-
-// goes into theming folder
-.something-h1 {}
-.something-h2 {}
-```
