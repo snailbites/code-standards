@@ -41,9 +41,8 @@ All selectors for a particular component start with the wrapper class name. Clas
 ```
 
 Children of the wrapper class should take on a dash and be written in camelcase. Sections with more than two dashes should consider creating a new parent style and start your naming again recursively.
-Ex: sectionParent-sectionChild. 
 
-```
+```css
 /* Good - wrapper and one child */
 .sectionParent-sectionChild {}
 
@@ -52,7 +51,8 @@ Ex: sectionParent-sectionChild.
 ```
 
 Class names can take on modifiers. If a class needs a simple property change, add the modifier to the end of the class, perceded by two dashes.
-```
+
+```less
 /* Good */
 .site {
     ...
@@ -65,6 +65,23 @@ Class names can take on modifiers. If a class needs a simple property change, ad
 .site.blue.red {
 ...
 }
+
+/* Good - nested child with modifier still it's own class */
+<div class=“someContainer”>
+	<div class=“newThing”>
+	</div>
+</div>
+
+.someContainer {
+    ...
+}
+.someContainer-newThing {
+    ...
+}
+.someContainer-newThing—-blue {
+    ...
+}
+
 ```
 
 Change of state, which is driven by angular/javascript (ie. classes tacked on using ng-class or a directive), should be named in a boolean fashion.
@@ -72,18 +89,82 @@ Change of state, which is driven by angular/javascript (ie. classes tacked on us
 ```
 /* Good */
 <button ng-class=“{ ‘isBlue’ : isClicked() }”>
+
 .isBlue {
     color: @colorBlue;
 }
 
-/* Bad */
+/* Good - one level nested within parent scope */
+<div class=“someContainer” ng-class=“{‘isActive’ : ‘1 === 1’}”>
+</div>
+
+.someContainer {
+    ...
+    
+    &.isActive {
+        ...
+    }
+}
+
+/* Bad - non descriptive and overqualified selector */
 <button ng-class=“{ ‘blueBtn’ : isClicked() }”>
+
+button.blueBtn {
+...
+}
 
 ```
 
+### Nesting
 
+Nesting should be limited to one level deep. More than two selectors become non-performant. 
 
+```scss
+/* Good */
+.site {
+    .inner {
+      ...
+    }
+}
 
+/* Bad - more than 1 level of nesting */
+.site {
+    .inner {
+      ...
+
+        .title {
+         ....
+
+            .subtxt {
+                ...
+
+                .element {
+                    ...
+
+                }
+            }
+        }
+    }
+}
+```
+
+If nesting is unavoidable, it is recommended to use the child selector, to limit the strain on performance.
+
+```
+<div class=“someContainer”>
+	<div class=“newThing”>
+		<h1>title</h1>
+		<iframe>
+		</iframe>
+	</div>
+</div>
+
+/* Good - 
+.newThing {
+	& > h1 {}
+	& > iframe {}	
+}
+```
 
 ### Selectors
 
@@ -173,39 +254,7 @@ Each property must be on its own line and indented one level. There should be no
 }
 ```
 
-### Nesting
-
-Nesting should be limited to one level deep. More than two selectors become non-performant. 
-
-```scss
-/* Good */
-.site {
-    .inner {
-      ...
-    }
-}
-
-/* Bad - more than 1 level of nesting */
-.site {
-    .inner {
-      ...
-
-        .title {
-         ....
-
-            .subtxt {
-                ...
-
-                .element {
-                    ...
-
-                }
-            }
-        }
-    }
-}
-```
-
+### Variables
 Declare extendable classes first in a declaration block with one line of whitespace beneath them.
 
 ```scss
@@ -219,7 +268,7 @@ Declare extendable classes first in a declaration block with one line of whitesp
 }
 
 /* Bad */
-.stubbornella {
+.site {
     color: #555;
     .transition(background, .3s, ease);
     font-size: 11px;
