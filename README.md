@@ -176,9 +176,9 @@ If nesting is unavoidable, it is recommended to use the child selector, to limit
 }
 ```
 
-### Use Pre-Processor Variables
+### Pre-Processor Variables
 
-Variables allow us to quickly reuse values and have a change once mentality. Variables should be created/used for things like fonts, line height, padding, margin etc. Please make sure that if you need a value that either greater than +10 or * 4 more, a new variable should be created (if this value is needed in more than one place/the px value should be used as it'll be easier to read)
+Use pre-processor variables whenever possible. Variables allow us to quickly reuse values and have a change once mentality. Variables should be created/used for things like fonts, line height, padding, margin etc. Please make sure that if you need a value that either greater than +10 or * 4 more, a new variable should be created (if this value is needed in more than one place/the px value should be used as it'll be easier to read)
 
 ```scss
 /* Good */
@@ -205,23 +205,25 @@ Variables allow us to quickly reuse values and have a change once mentality. Var
 }
 ```
 
+Declare extendable classes first in a declaration block with one line of whitespace beneath them.
 
-### Selectors
-
-Each selector should appear on its own line. The line should break immediately after the comma. Each selector should be aligned to the same left column.
-
-```css 
+```scss
 /* Good */
-button,
-input.button {
-   color: red;
+.site {
+    .transition(background, .3s, ease);
+    .text-left;
+    
+    color: #555;
+    font-size: 11px;
 }
 
-/* Bad - selectors on one line */
-button, input.button {
-   color: red;
+/* Bad */
+.site {
+    color: #555;
+    .transition(background, .3s, ease);
+    font-size: 11px;
+    .text-left;
 }
-```
 
 ### Indentation
 
@@ -295,25 +297,7 @@ Each property must be on its own line and indented one level. There should be no
 ```
 
 ### Variables
-Declare extendable classes first in a declaration block with one line of whitespace beneath them.
 
-```scss
-/* Good */
-.site {
-    .transition(background, .3s, ease);
-    .text-left;
-    
-    color: #555;
-    font-size: 11px;
-}
-
-/* Bad */
-.site {
-    color: #555;
-    .transition(background, .3s, ease);
-    font-size: 11px;
-    .text-left;
-}
 ```
 
 ### Vendor-Prefixed Properties
@@ -328,7 +312,7 @@ When using vendor-prefixed properties, always use the standard property as well.
 }
 ```
 
-If a vendor prefixed property is used, -moz, -webkit, -o, -ms vendor prefixes should also be used. Vendor-prefixed classes should align to the left with all other properties.
+If a vendor prefixed property is used, -moz, -webkit, -o, -ms vendor prefixes should also be used. Vendor-prefixed classes should align to the left with all other properties. Ideally, these would be moved to a mixin for maintainability.
 
 ```css
 /* Good */
@@ -345,7 +329,7 @@ border-radius: 4px;
 Do not use !important on CSS properties. They will ruin specificity.
 ```css
 /* Good */
-.site {
+.site--red {
    color: red;
 }
 
@@ -389,12 +373,12 @@ Strings should always use double quotes (never single quotes).
 ```css
 /* Good */
 .container:after {
-    content: "Stubbornella";
+    content: "]";
 }
 
 /* Bad - single quotes */
 .container:after {
-    content: 'Stubbornella';
+    content: ']';
 }
 ```
 
