@@ -1,6 +1,8 @@
-# Code Standards
+# UMAMI Stylesheet Guide
 
-The purpose of this document is to provide guidelines for writing CSS. Code conventions are important for the long-term maintainability of code. Most of the time, developers are maintaining code, either their own or someone else’s. The goal is to have everyone’s code look the same, which allows any developer to easily work on another developer’s code.
+This document helps explain some of the conventions and practices used in building the stylesheet(s) for the UMAMI project.
+
+# Code Standards
 
 We've borrowed plenty of ideas in the formation of this document. Ultimately, what you are reading has been strongly influenced by the ideas of Medium's style guide and Nicole Sullivan's Style Guide Driven Development. What you are seeing is a mix of OOCSS and BEM. For more information, read here:
 
@@ -10,28 +12,47 @@ We've borrowed plenty of ideas in the formation of this document. Ultimately, wh
 * [Style Guide Driven Development](https://www.youtube.com/watch?v=ldW7zVmqu5g)
 
 ### Comments
-Add file-level comments at the top of every CSS file, describing the file in the following format:
+We use C style commenting in our LESS. Add file-level comments at the top of every file, describing the file in the following format:
 
 ```css
 /**
-* @desc         Description of the file.
 * @name         Simple name for the file (i.e., Search_Widget)
+* @desc         Description of the file.
 * @tested       browser 1, browser 2
-* @requires     helpers.css (tied to the @name of another file)
+* @url          an example URL where this code can be seen
 */
 ```
 
-Comments should go on the same name as the CSS style. Magic numbers, odd values, and things that might confuse other developers should always be commented.
+For important sections within the same document, break them out according to priority. Use *'s for highest priority, and -'s for secondary priority.
+
+```css
+/*****************************************************
+* Globals
+******************************************************/
+@brandRestoHeaderRatingSize: 24px;
+@brandRestoHeaderBlur: 20px;
+
+/*------------------------------------------------------
+ * Toggle Button
+ *-----------------------------------------------------*/
+
+.section-toggle {
+    ...
+}
+ 
+```
+
+Comments should go on the same line as the CSS style. Magic numbers, odd values, and things that might confuse other developers should always be commented.
 
 ```css
 /* Good - gives helpful explanation to other developers */
 .container {
-	padding: 37px; /* This is needed to match the design of the gutter */
+  padding: 37px; /* This is needed to match the design of the gutter */
 }
 
 /* Bad - no comment */
 .container {
-	float: left !important;
+  float: left !important;
 }
 ```
 
@@ -60,7 +81,7 @@ Children of the wrapper class should take on a dash and be written in camelcase.
 .sectionParent-sectionChild-sectionChild2-sectionThisIsSparta {}
 ```
 
-Class names can take on modifiers. If a class needs a simple property change, add the modifier to the end of the class, perceded by two dashes.
+Class names can take on modifiers. If a class needs a simple property change, add the modifier to the end of the class, perceded by two dashes. Examples of modifiers are 
 
 ```less
 /* Good */
@@ -71,15 +92,23 @@ Class names can take on modifiers. If a class needs a simple property change, ad
     color: @colorBlue;
 }
 
-/* Bad */``
+/* Bad - dont chain classes, create a new one */
 .site.blue.red {
 ...
 }
 
-/* Good - nested child with modifier still it's own class */
+/* Bad - this is a subsection, not a modifier */
+.site {
+    ...
+}
+.site--childElement {
+    color: @colorBlue;
+}
+
+/* Good - nested child with modifier still its own class */
 <div class=“someContainer”>
-	<div class=“newThing”>
-	</div>
+  <div class=“newThing”>
+  </div>
 </div>
 
 .someContainer {
@@ -125,6 +154,25 @@ button.blueBtn {
 
 ```
 
+s- should only be used when extending an existing bootstrap class. If we're not extending a bootstrap class. There is no other need to create a new class with the prefix s-.
+
+```scss
+/* Bad - There is no need to use s- as a prefix */
+.s-layout-module {
+    ...
+}
+
+/* Good */
+.layoutModule {
+    float: left;
+}
+
+/* Good - This is only acceptable when you cannot directly control the markup to add a new class */
+.someModule > .s-btn {
+    color: red;
+}
+```
+
 ### Nesting
 
 Nesting should be limited to one level deep. More than two selectors become non-performant. 
@@ -162,19 +210,39 @@ If nesting is unavoidable, it is recommended to use the child selector, to limit
 
 ```
 <div class=“someContainer”>
-	<div class=“newThing”>
-		<h1>title</h1>
-		<iframe>
-		</iframe>
-	</div>
+  <div class=“newThing”>
+    <h1>title</h1>
+    <iframe>
+    </iframe>
+  </div>
 </div>
 
 /* Good - 
 .newThing {
-	& > h1 {}
-	& > iframe {}	
+  & > h1 {}
+  & > iframe {} 
 }
 ```
+
+It is also acceptable to use LESS nesting to create modifier classes. In certain cases it is more helpful to other developers to see groups of classes clustered together in a parent class. However, this can easily be confused with unacceptable nesting, so should be used carefully. Keep in mind that overuse of this technique can counteract the avoidance of nesting as stated earlier.
+
+
+```less
+/* Good - 
+.someModule {
+    ...
+    
+    &-inner {
+        ...
+    }
+    
+  &--blue {
+      color: blue;
+    }
+    
+}
+```
+
 
 ### Pre-Processor Variables
 
@@ -204,6 +272,29 @@ Use pre-processor variables whenever possible. Variables allow us to quickly reu
     font-size: @fontSizeLarge + 20;
 }
 ```
+
+It is best practice to compose units like font-size and margins by multiples and additions/substractions of these variables. Multiplying by more than 4 is counter-productive and should be avoided. It is acceptable to use a magic number in this case.
+
+```scss
+/* Good */
+
+.someModule-someElement {
+    margin-left: @padding-base-vertical * 3;
+}
+
+/* Bad */
+
+.someModule-someElement {
+    margin-left: 15px;
+}
+
+/* Bad */
+.someModule-someElement {
+    margin-left:  @padding-base-vertical * 17;
+}
+
+```
+ 
 
 Declare extendable classes first in a declaration block with one line of whitespace beneath them.
 
@@ -300,6 +391,79 @@ Each property must be on its own line and indented one level. There should be no
 
 ```
 
+```
+
+### Indentation
+
+Each indentation level is made up of four spaces. Do not use tabs. (Please set your editor to use four spaces)
+
+```css
+/* Good */
+.site {
+    color: #fff;
+    background-color: #000;
+}
+
+/* Bad - all on one line */
+.site {color: #fff; background-color: #000;}
+```
+
+Rules inside of `@media` must be indented an additional level.
+
+```css
+/* Good */
+@media screen and (max-width:480px) {
+   .site {
+       color: green;
+   }
+}
+```
+
+### Brace Alignment
+
+The opening brace should be on the same line as the last selector in the rule and should be preceded by a space. The closing brace should be on its own line after the last property and be indented to the same level as the line on which the opening brace is. Keep in mind that you are not saving bytes by this. Spaces are ultimately removed in the build process.
+
+```css
+/* Good */
+.site {
+    color: #fff;
+}
+
+/* Bad - closing brace is in the wrong place */
+.site {
+    color: #fff;
+    }
+
+/* Bad - opening brace missing space */
+.site{
+    color: #fff;
+}
+```
+
+### Property Format
+
+Each property must be on its own line and indented one level. There should be no space before the colon and one space after. All properties must end with a semicolon.
+
+```css
+/* Good */
+.site {
+    background-color: blue;
+    color: red;
+}
+
+/* Bad - missing spaces after colons */
+.site {
+    background-color:blue;
+    color:red;
+}
+
+/* Bad - missing last semicolon */
+.site {
+    background-color: blue;
+    color:red
+}
+```
+
 ### Vendor-Prefixed Properties
 
 When using vendor-prefixed properties, always use the standard property as well. The standard property must always come after all of the vendor-prefixed versions of the same property.
@@ -336,33 +500,6 @@ Do not use !important on CSS properties. They will ruin specificity.
 /* Bad - don't use !important */
 .site {
    color: red !important;
-}
-```
-
-### Font Sizing
-
-All font sizes must be specified using rem only with a pixel fall back. Do not use percentages, ems or pixels alone.
-
-```css
-/* Good */
-.site {
-   font-size: 14px; /* pixel fall back rule should come first */
-   font-size: 1.4rem;
-}
-
-/* Bad - uses ems */
-.site {
-   font-size: 1.2em;
-}
-
-/* Bad - uses percentage */
-.site {
-   font-size: 86%;
-}
-
-/* Bad - uses pixel only */
-.site {
-   font-size: 14px;
 }
 ```
 
